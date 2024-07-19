@@ -1,0 +1,10 @@
+# Folders
+coverage
+dist
+node_modules
+storybook-static
+.nyc_output
+
+# Files
+/*tgz
+.jest-test-results.json

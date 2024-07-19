@@ -1,0 +1,109 @@
+{
+  "name": "@namanjeetsingh/ui-component-library",
+  "author": "Namanjeet Singh",
+  "license": "MIT",
+  "version": "1.1.0-0",
+  "description": "A React Storybook boilerplate for rapidly developing user interfaces",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "concurrently 'npm install' 'npm run test:watch' 'npm run storybook:start-and-test:watch'",
+    "dev:docker": "docker run --rm -it -w /app -v ${PWD}:/app -p 6005:6005 $(docker build . -q) sh -c 'npm run dev'",
+    "lint": "eslint . -c .eslintrc --ext .ts,.tsx",
+    "lint:fix": "npm run lint -- --fix",
+    "storybook": "cross-env TS_NODE_PROJECT=.storybook/tsconfig.json start-storybook -p 8083",
+    "storybook:test": "test-storybook --url http://127.0.0.1:6005 --browsers chromium",
+    "storybook:test:watch": "npm run storybook:test -- --watch",
+    "storybook:start-and-test": "TS_NODE_PROJECT=.storybook/tsconfig.json start-test storybook 6005 'storybook:test'",
+    "storybook:start-and-test:watch": "TS_NODE_PROJECT=.storybook/tsconfig.json start-test storybook 6005 'storybook:test:watch'",
+    "storybook:build": "npm test && TS_NODE_PROJECT=.storybook/tsconfig.json build-storybook",
+    "test": "jest --json --outputFile=.jest-test-results.json",
+    "test:watch": "npm test -- --watch",
+    "compile": "tsc",
+    "build": "rollup -c",
+    "health-check": "time concurrently --group --kill-others-on-fail --timings 'npm run lint --quiet' 'npm run compile' 'npm run build' 'npm test' 'npm run storybook:build' 'echo \"move `npm run storybook:start-and-test` to here from pre-push\"'",
+    "health-check:docker": "docker run --rm -w /app -v ${PWD}:/app $(docker build . -q) sh -c 'npm ci && npm run health-check'",
+    "prepublishOnly": "npm build"
+  },
+  "husky": {
+    "hooks": {
+      "post-commit": "npm run lint:fix",
+      "pre-push": "npm run health-check && npm run storybook:start-and-test"
+    }
+  },
+  "np": {
+    "publish": false,
+    "tests": false
+  },
+  "keywords": [
+    "storybook",
+    "react",
+    "typescript"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.21.5",
+    "@olliecaine/eslint-config": "^1.0.6",
+    "@olliecaine/storybook-utils": "0.0.2",
+    "@olliecaine/tsconfig": "^1.0.10",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-interactions": "^6.5.16",
+    "@storybook/addon-jest": "^6.5.16",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/builder-webpack5": "^6.5.16",
+    "@storybook/core-common": "^6.5.16",
+    "@storybook/jest": "0.0.10",
+    "@storybook/manager-webpack5": "^6.5.16",
+    "@storybook/node-logger": "^7.0.7",
+    "@storybook/react": "^6.5.16",
+    "@storybook/test-runner": "^0.16.0",
+    "@storybook/testing-library": "0.0.13",
+    "@testing-library/react": "^14.0.0",
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.1.3",
+    "@types/react": "^18.0.38",
+    "@typescript-eslint/parser": "^5.58.0",
+    "babel-loader": "^9.1.2",
+    "concurrently": "^8.0.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.38.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "husky": "^1.3.1",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "postcss": "^8.4.31",
+    "react": "^18.2.0",
+    "react-docgen-typescript-plugin": "^1.0.5",
+    "react-dom": "^18.2.0",
+    "rollup": "^2.79.1",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "start-server-and-test": "^2.0.3",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "@types/styled-components": "^5.1.34",
+    "classnames": "^2.3.2",
+    "styled-components": "^6.1.12"
+  }
+}
